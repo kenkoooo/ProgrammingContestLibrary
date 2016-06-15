@@ -1,2 +1,5 @@
-# プロコン用 Java ライブラリ
+# Java Libraries for Programming Contest
 
+```
+gradle test
+```
