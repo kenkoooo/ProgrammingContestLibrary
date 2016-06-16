@@ -1,5 +1,5 @@
 language: java
 script:
- - gradle build
+ - gradle build --stacktrace
  - gradle test
 
