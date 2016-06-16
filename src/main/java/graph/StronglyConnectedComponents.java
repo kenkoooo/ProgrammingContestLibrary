@@ -11,7 +11,7 @@ public class StronglyConnectedComponents {
     int[] cmp = new int[V];
 
     ArrayList<ArrayList<Integer>> rG = new ArrayList<>(V);
-    for (ArrayList<Integer> ignored : G) rG.add(new ArrayList<>());
+    for (int i = 0; i < V; i++) rG.add(new ArrayList<Integer>());
     for (int i = 0; i < V; i++) for (int v : G.get(i)) rG.get(v).add(i);
     boolean[] used = new boolean[V];
 
