@@ -33,7 +33,7 @@ public class RollingHash64 {
     int l = 0, r = Math.min(n - i, n - j) + 1;
     while (l + 1 < r) {
       int m = (l + r) / 2;
-      if (match(i, i + m, j, j + m))
+      if (match(i, j, m))
         l = m;
       else
         r = m;
