@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class StronglyConnectedComponents {
-  public static int[] decomposite(ArrayList<Integer>[] G) {
+  public static int[] decompose(ArrayList<Integer>[] G) {
     ArrayList<Integer> vs = new ArrayList<Integer>();
     int V = G.length;
     int[] cmp = new int[V];

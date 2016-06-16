@@ -18,7 +18,7 @@ class StronglyConnectedComponentsTest extends Specification {
                 wf[from][to] = true
             }
 
-            int[] cmp = StronglyConnectedComponents.decomposite(g)
+            int[] cmp = StronglyConnectedComponents.decompose(g)
             for (int k = 0; k < N; k++) {
                 for (int i = 0; i < N; i++) {
                     for (int j = 0; j < N; j++) {
