@@ -6,13 +6,15 @@ apply plugin: 'java'
 sourceCompatibility = 1.7
 
 repositories {
-    mavenCentral()
-
-    // Spock snapshots are available from the Sonatype OSS snapshot repository
-    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+    jcenter()
+//    mavenCentral()
+//
+//    // Spock snapshots are available from the Sonatype OSS snapshot repository
+//    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
     testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
+    testCompile 'com.athaydes:spock-reports:1.2.7'
 }
