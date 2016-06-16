@@ -1,3 +1,4 @@
 language: java
-script: gradle test --stacktrace --info
+script:
+ - gradle build
 
