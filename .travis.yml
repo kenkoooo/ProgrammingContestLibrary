@@ -9,4 +9,6 @@ cache:
   - $HOME/.gradle/wrapper/
 script:
  - gradle build --stacktrace
-
+env:
+  global:
+  - GRADLE_OPTS="-Xmx1024m -Xms256m -XX:MaxPermSize=256m -XX:PermSize=256m"
