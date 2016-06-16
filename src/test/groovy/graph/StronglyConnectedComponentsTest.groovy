@@ -9,12 +9,12 @@ class StronglyConnectedComponentsTest extends Specification {
         10.times {
             int N = 500
             boolean[][] wf = new boolean[N][N]
-            ArrayList<Integer>[] g = new ArrayList<Integer>[N]
-            for (i in 0..<N) g[i] = new ArrayList<Integer>();
+            ArrayList<ArrayList<Integer>> g = new ArrayList<>(N)
+            for (i in 0..<N) g.add(new ArrayList<Integer>())
             (N * 5).times {
                 int from = random.nextInt(N)
                 int to = random.nextInt(N)
-                g[from].add(to)
+                g.get(from).add(to)
                 wf[from][to] = true
             }
 

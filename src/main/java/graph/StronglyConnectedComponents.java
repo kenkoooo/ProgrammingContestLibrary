@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class StronglyConnectedComponents {
-  public static int[] decompose(ArrayList<Integer>[] G) {
-    ArrayList<Integer> vs = new ArrayList<Integer>();
-    int V = G.length;
+  public static int[] decompose(ArrayList<ArrayList<Integer>> G) {
+    ArrayList<Integer> vs = new ArrayList<>();
+    int V = G.size();
     int[] cmp = new int[V];
 
-    ArrayList<Integer>[] rG = new ArrayList[V];
-    for (int i = 0; i < V; i++) rG[i] = new ArrayList<Integer>();
-    for (int i = 0; i < V; i++) for (int v : G[i]) rG[v].add(i);
+    ArrayList<ArrayList<Integer>> rG = new ArrayList<>(V);
+    for (ArrayList<Integer> ignored : G) rG.add(new ArrayList<>());
+    for (int i = 0; i < V; i++) for (int v : G.get(i)) rG.get(v).add(i);
     boolean[] used = new boolean[V];
 
     ArrayDeque<Integer> stack = new ArrayDeque<>();
@@ -24,8 +24,8 @@ public class StronglyConnectedComponents {
           int v = stack.peekFirst();
           used[v] = true;
           boolean pushed = false;
-          for (int j = G[v].size() - 1; j >= 0; j--) {
-            int u = G[v].get(j);
+          for (int j = G.get(v).size() - 1; j >= 0; j--) {
+            int u = G.get(v).get(j);
             if (!used[u]) {
               stack.addFirst(u);
               pushed = true;
@@ -52,7 +52,7 @@ public class StronglyConnectedComponents {
         while (!stack.isEmpty()) {
           int v = stack.peek();
           boolean pushed = false;
-          for (int u : rG[v])
+          for (int u : rG.get(v))
             if (!used[u]) {
               used[u] = true;
               cmp[u] = k;
