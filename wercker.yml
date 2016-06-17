@@ -7,4 +7,4 @@ build:
     - script:
       name: gradle bootRun
       code: |
-        gradle build
+        ./gradlew
