@@ -1,6 +1,6 @@
 # Java Libraries for Programming Contest
 
-[![Build Status](https://travis-ci.org/kenkoooo/ProgrammingContestLibrary.svg?branch=master)](https://travis-ci.org/kenkoooo/ProgrammingContestLibrary)
+[![wercker status](https://app.wercker.com/status/1ea2ce13fd2e804ab131957e9aeeec28/m "wercker status")](https://app.wercker.com/project/bykey/1ea2ce13fd2e804ab131957e9aeeec28)
 
 ```
 gradle test
