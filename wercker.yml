@@ -5,6 +5,6 @@ box: java
 build:
   steps:
     - script:
-      name: gradle bootRun
+      name: gradle build
       code: |
-        ./gradlew
+        ./gradlew build
