@@ -2,7 +2,7 @@
 box: java
 
 # defining the dev pipeline
-dev:
+build:
   steps:
     - script:
       name: gradle bootRun
