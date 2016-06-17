@@ -13,10 +13,6 @@ repositories {
 //    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
-test {
-    maxParallelForks 1
-}
-
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
     testCompile "org.spockframework:spock-core:1.0-groovy-2.4"

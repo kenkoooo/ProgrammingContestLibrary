@@ -1,0 +1,10 @@
+# docker box definition
+box: java
+
+# defining the dev pipeline
+dev:
+  steps:
+    - script:
+      name: gradle bootRun
+      code: |
+        gradle build
