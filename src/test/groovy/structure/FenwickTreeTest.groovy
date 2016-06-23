@@ -58,8 +58,6 @@ class FenwickTreeTest extends Specification {
                 assert s == tree.getAsSetOf(k)
                 k++
             }
-
         }
     }
-
 }
