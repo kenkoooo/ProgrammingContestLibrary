@@ -1,6 +1,8 @@
 package graph;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 class LCA {
   ArrayList<ArrayList<Integer>> G;
@@ -8,10 +10,22 @@ class LCA {
   int[] depth;
   int root, logV;
 
-  void dfs(int v, int p, int d) {
-    parent[0][v] = p;
-    depth[v] = d;
-    for (int u : G.get(v)) if (u != p) dfs(u, v, d + 1);
+  void build(int root) {
+    Arrays.fill(depth, -1);
+    ArrayDeque<Integer> stack = new ArrayDeque<>();
+    stack.addFirst(root);
+    parent[0][root] = -1;
+    depth[root] = 0;
+    while (!stack.isEmpty()) {
+      int v = stack.peekFirst();
+      for (int u : G.get(v)) {
+        if (depth[u] >= 0) continue;
+        parent[0][u] = v;
+        depth[u] = depth[v] + 1;
+        stack.addFirst(u);
+      }
+      if (stack.peekFirst() == v) stack.pollFirst();
+    }
   }
 
   LCA(final ArrayList<ArrayList<Integer>> adj) {
@@ -27,7 +41,7 @@ class LCA {
     }
     parent = new int[logV][V];
 
-    dfs(root, -1, 0);
+    build(root);
 
     for (int k = 0; k + 1 < logV; ++k)
       for (int v = 0; v < V; ++v)
