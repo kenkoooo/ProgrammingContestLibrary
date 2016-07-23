@@ -16,7 +16,6 @@ class UnionFindTest extends Specification {
             int N = Integer.parseInt(list.poll())
             if (N == 0) break;
 
-
             double[][] stations = new double[N][4];
             for (int i = 0; i < stations.length; i++) {
                 String[] l = list.poll().split(" ")
@@ -24,8 +23,6 @@ class UnionFindTest extends Specification {
                     stations[i][j] = Double.parseDouble(l[j])
                 }
             }
-
-
 
             PriorityQueue<Edge> edges = new PriorityQueue<Edge>();
             for (int i = 0; i < N; i++) {
@@ -47,11 +44,23 @@ class UnionFindTest extends Specification {
 
             double ans = 0.0
             UnionFind unionFind = new UnionFind(N)
+            int size = N
             while (!edges.isEmpty()) {
                 Edge e = edges.poll()
-                if (unionFind.same(e.to, e.from)) continue
+                if (unionFind.isSame(e.to, e.from)) continue
                 ans += e.weight
-                unionFind.unite(e.to, e.from)
+
+                int p1 = unionFind.partialSizeOf(e.to)
+                int p2 = unionFind.partialSizeOf(e.from)
+
+                boolean merged = unionFind.unite(e.to, e.from)
+                assert merged
+
+                int p12 = unionFind.partialSizeOf(e.from)
+                assert p12 == p1 + p2
+
+                size--
+                assert unionFind.size() == size
             }
 
             answers.add(ans)
