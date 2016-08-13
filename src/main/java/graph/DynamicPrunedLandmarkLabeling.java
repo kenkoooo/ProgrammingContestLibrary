@@ -7,7 +7,7 @@ import java.util.PriorityQueue;
 
 @SuppressWarnings("unchecked")
 public class DynamicPrunedLandmarkLabeling {
-  public static int INF = (int) 10000;
+  private static int INF = (int) 1e9;
 
   public static class Edge implements Comparable<Edge> {
     int to, weight;
@@ -22,7 +22,7 @@ public class DynamicPrunedLandmarkLabeling {
     }
   }
 
-  class Index {
+  private class Index {
     ArrayList<Integer> spt_v = new ArrayList<>();
     ArrayList<Integer> spt_d = new ArrayList<>();
     int size() {
@@ -57,11 +57,11 @@ public class DynamicPrunedLandmarkLabeling {
 
   }
 
-  int numV;
-  int[] rank;//rank[v] := 頂点 v の rank
-  int[] inv;// inv[r] := rank が r の頂点
-  ArrayList<Edge>[][] G = new ArrayList[2][];
-  Index[][] idx = new Index[2][];
+  private int numV;//グラフの頂点数
+  private int[] rank;//rank[v] := 頂点 v の rank
+  private int[] inv;// inv[r] := rank が r の頂点
+  private ArrayList<Edge>[][] G = new ArrayList[2][];
+  private Index[][] idx = new Index[2][];
 
   DynamicPrunedLandmarkLabeling(ArrayList<Edge>[] g) {
     numV = g.length;
@@ -109,13 +109,14 @@ public class DynamicPrunedLandmarkLabeling {
     boolean[] used = new boolean[numV];
     for (int root = 0; root < numV; root++) {
       if (used[root]) continue;
-      pruneBFS(root, 0, used);
-      pruneBFS(root, 1, used);
+      pruneBFS(root, true, used);
+      pruneBFS(root, false, used);
       used[root] = true;
     }
   }
 
-  void pruneBFS(int root, int direction, boolean[] used) {
+  private void pruneBFS(int root, boolean isForward, boolean[] used) {
+    int direction = isForward ? 0 : 1;
     int another = direction ^ 1;
     PriorityQueue<Edge> queue = new PriorityQueue<>();
     queue.add(new Edge(root, 0));
@@ -125,7 +126,7 @@ public class DynamicPrunedLandmarkLabeling {
 
     while (!queue.isEmpty()) {
       int u = queue.poll().to;
-      if (u != root && distanceLess(root, u, direction, dist[u]) <= dist[u])
+      if (u != root && distanceLess(root, u, isForward, dist[u]) <= dist[u])
         continue;
       idx[another][inv[u]].update(root, dist[u]);
 
@@ -137,11 +138,20 @@ public class DynamicPrunedLandmarkLabeling {
         queue.add(new Edge(w, dist[w]));
       }
     }
-    return;
   }
 
-  int distanceLess(int from, int to, int direction, int upperLimit) {
-
+  /**
+   * from から to までの isForward 方向の最短距離を返します。
+   * upperLimit 以下であれば即座に返します。
+   *
+   * @param from       スタートの頂点
+   * @param to         ゴールの頂点
+   * @param isForward  順向きかどうか
+   * @param upperLimit 距離の上限
+   * @return 最短距離が少なくとも上限以下であれば、上限以下の値を、そうでなければ最短距離を返す
+   */
+  private int distanceLess(int from, int to, boolean isForward, int upperLimit) {
+    int direction = isForward ? 0 : 1;
     int another = direction ^ 1;
 
     int d = INF;
@@ -173,7 +183,6 @@ public class DynamicPrunedLandmarkLabeling {
     if (from == to) return 0;
     from = rank[from];
     to = rank[to];
-    return distanceLess(from, to, 0, 0);
+    return distanceLess(from, to, true, 0);
   }
-
 }
