@@ -6,7 +6,7 @@ class DynamicPrunedLandmarkLabelingTest extends Specification {
     def "構築チェック"() {
         setup:
         int N = 500
-        int INF = 100
+        int INF = 1000
         Random random = new Random()
         int[][] dist = new int[N][N]
         ArrayList<DynamicPrunedLandmarkLabeling.Edge>[] G = new ArrayList<DynamicPrunedLandmarkLabeling.Edge>[N];
@@ -50,6 +50,5 @@ class DynamicPrunedLandmarkLabelingTest extends Specification {
                 assert dist[i][j] == pll.queryDistance(i, j)
             }
         }
-
     }
 }

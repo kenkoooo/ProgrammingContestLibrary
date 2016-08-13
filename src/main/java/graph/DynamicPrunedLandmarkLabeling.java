@@ -25,6 +25,7 @@ public class DynamicPrunedLandmarkLabeling {
   private class Index {
     ArrayList<Integer> spt_v = new ArrayList<>();
     ArrayList<Integer> spt_d = new ArrayList<>();
+
     int size() {
       return spt_v.size();
     }
@@ -45,8 +46,8 @@ public class DynamicPrunedLandmarkLabeling {
         return;
       }
 
-      spt_v.add(spt_v.get(size() - 1));
-      spt_d.add(spt_d.get(size() - 1));
+      spt_v.add(spt_v.get(spt_v.size() - 1));
+      spt_d.add(spt_d.get(spt_d.size() - 1));
       for (int j = spt_v.size() - 1; j > i; --j) {
         spt_v.set(j, spt_v.get(j - 1));
         spt_d.set(j, spt_d.get(j - 1));
@@ -133,7 +134,7 @@ public class DynamicPrunedLandmarkLabeling {
       for (Edge edge : G[direction][inv[u]]) {
         int w = rank[edge.to];
         if (used[w]) continue;
-        if (dist[w] < dist[u] + edge.weight) continue;
+        if (dist[w] <= dist[u] + edge.weight) continue;
         dist[w] = dist[u] + edge.weight;
         queue.add(new Edge(w, dist[w]));
       }
@@ -158,8 +159,8 @@ public class DynamicPrunedLandmarkLabeling {
     Index idx_from = idx[direction][inv[from]];
     Index idx_to = idx[another][inv[to]];
     for (int i1 = 0, i2 = 0; i1 < idx_from.size() || i2 < idx_to.size(); ) {
-      int v1 = (i1 < idx_from.size() ? idx_from.spt_v.get(i1) : INF);
-      int v2 = (i2 < idx_to.size() ? idx_to.spt_v.get(i2) : INF);
+      int v1 = (i1 < idx_from.size() ? idx_from.spt_v.get(i1) : numV);
+      int v2 = (i2 < idx_to.size() ? idx_to.spt_v.get(i2) : numV);
       if (v1 == v2) {
         int td = idx_from.spt_d.get(i1) + idx_to.spt_d.get(i2);
         if (td < d) {
@@ -185,4 +186,5 @@ public class DynamicPrunedLandmarkLabeling {
     to = rank[to];
     return distanceLess(from, to, true, 0);
   }
+
 }
