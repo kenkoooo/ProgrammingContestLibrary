@@ -23,4 +23,4 @@ public class Combination {
   public long get(int x, int y) {
     return fact[x] * invFact[y] % MOD * invFact[x - y] % MOD;
   }
-};
+}
