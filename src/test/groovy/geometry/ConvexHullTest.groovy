@@ -14,23 +14,25 @@ class ConvexHullTest extends Specification {
         ArrayList<String> ans = new ArrayList<>();
         while (!list.isEmpty()) {
             int N = Integer.parseInt(list.poll())
-            Integer[][] xy = new Integer[N][2];
+            ArrayList<Point> ps = new ArrayList<>(N);
             for (int i = 0; i < N; i++) {
                 String[] ixy = list.poll().split(" ")
-                xy[i][0] = Integer.parseInt(ixy[0]);
-                xy[i][1] = Integer.parseInt(ixy[1]);
+                int x = Integer.parseInt(ixy[0]);
+                int y = Integer.parseInt(ixy[1]);
+                ps.add(new Point(x, y))
             }
 
-            ArrayList<Integer[]> a = ConvexHull.run(xy);
+            ArrayList<Point> a = ConvexHull.run(ps);
             ans.add(String.valueOf(a.size()));
             int start = 0;
             for (int i = 0; i < a.size(); i++) {
-                if (a.get(i)[1] < a.get(start)[1] || (a.get(i)[1] == a.get(start)[1] && a.get(i)[0] < a.get(start)[0]))
+                if (a.get(i).y < a.get(start).y
+                        || (a.get(i).y == a.get(start).y && a.get(i).x < a.get(start).x))
                     start = i;
             }
             for (int i = 0; i < a.size(); i++) {
-                Integer[] b = a.get((i + start) % a.size());
-                ans.add(b[0] + " " + b[1]);
+                Point b = a.get((i + start) % a.size());
+                ans.add(b.x + " " + b.y);
             }
         }
 

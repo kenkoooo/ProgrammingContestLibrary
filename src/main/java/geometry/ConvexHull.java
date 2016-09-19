@@ -1,48 +1,51 @@
 package geometry;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class ConvexHull {
-  public static <T extends Number> ArrayList<T[]> run(T[][] xy) {
-    int N = xy.length;
+  public static ArrayList<Point> run(ArrayList<Point> ps) {
+    int N = ps.size();
     if (N <= 1) {
-      ArrayList<T[]> list = new ArrayList<>();
-      Collections.addAll(list, xy);
-      return list;
+      return new ArrayList<>(ps);
     }
-    Arrays.sort(xy, new Comparator<T[]>() {
-      @Override
-      public int compare(T[] a, T[] b) {
-        if (!a[0].equals(b[0])) return Double.compare(a[0].doubleValue(), b[0].doubleValue());
-        return Double.compare(a[1].doubleValue(), b[1].doubleValue());
-      }
-    });
+
+    Collections.sort(ps);
 
     int[] qs = new int[N * 2];//構築中の凸包
     int k = 0;//凸包の頂点数
+
+    // 下側の凸包を作成
     for (int i = 0; i < N; i++) {
-      if (k >= 1 && xy[qs[k - 1]][0].equals(xy[i][0]) && xy[qs[k - 1]][1].equals(xy[i][1])) continue;
-      while (k > 1 && ccw(xy[qs[k - 2]], xy[qs[k - 1]], xy[i]) > 0) k--;
+      if (k >= 1 && ps.get(qs[k - 1]).x == ps.get(i).x
+        && ps.get(qs[k - 1]).y == ps.get(i).y) continue;
+      while (k > 1 && counterClockWise(ps.get(qs[k - 2]), ps.get(qs[k - 1]), ps.get(i)) > 0) k--;
       qs[k++] = i;
     }
 
+    // 上側の凸包を作成
     int inf = k + 1;
     for (int i = N - 2; i >= 0; i--) {
-      if (xy[qs[k - 1]][0] == xy[i][0] && xy[qs[k - 1]][1] == xy[i][1]) continue;
-      while (k >= inf && ccw(xy[qs[k - 2]], xy[qs[k - 1]], xy[i]) > 0) k--;
+      if (k >= 1 && ps.get(qs[k - 1]).x == ps.get(i).x
+        && ps.get(qs[k - 1]).y == ps.get(i).y) continue;
+      while (k >= inf && counterClockWise(ps.get(qs[k - 2]), ps.get(qs[k - 1]), ps.get(i)) > 0) k--;
       qs[k++] = i;
     }
 
-    ArrayList<T[]> ret = new ArrayList<>(k - 1);
-    for (int i = 0; i < k - 1; i++) ret.add(xy[qs[i]]);
+    ArrayList<Point> ret = new ArrayList<>(k - 1);
+    for (int i = 0; i < k - 1; i++) ret.add(ps.get(qs[i]));
     return ret;
   }
 
-  private static <T extends Number> double ccw(T[] a, T[] b, T[] t) {
-    return (t[0].doubleValue() - a[0].doubleValue()) * (b[1].doubleValue()
-      - a[1].doubleValue()) - (b[0].doubleValue() - a[0].doubleValue()) * (t[1].doubleValue() - a[1].doubleValue());
+  /**
+   * a->b から見て、t が反時計回り方向にあるなら正の値を返す
+   *
+   * @param a
+   * @param b
+   * @param t
+   * @return
+   */
+  public static int counterClockWise(Point a, Point b, Point t) {
+    return (t.x - a.x) * (b.y - a.y) - (b.x - a.x) * (t.y - a.y);
   }
 }
