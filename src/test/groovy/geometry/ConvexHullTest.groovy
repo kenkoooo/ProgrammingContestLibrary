@@ -32,7 +32,7 @@ class ConvexHullTest extends Specification {
             }
             for (int i = 0; i < a.size(); i++) {
                 Point b = a.get((i + start) % a.size());
-                ans.add(b.x + " " + b.y);
+                ans.add(((int) b.x) + " " + ((int) b.y));
             }
         }
 

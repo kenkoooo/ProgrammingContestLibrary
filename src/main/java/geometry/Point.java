@@ -1,16 +1,16 @@
 package geometry;
 
 class Point implements Comparable<Point> {
-  int x, y;
-  Point(int x, int y) {
+  double x, y;
+  Point(double x, double y) {
     this.x = x;
     this.y = y;
   }
 
   @Override
   public int compareTo(Point o) {
-    if (this.x == o.x) return this.y - o.y;
-    return this.x - o.x;
+    if (this.x == o.x) return Double.compare(this.y, o.y);
+    return Double.compare(this.x, o.x);
   }
 
   /**
@@ -19,7 +19,7 @@ class Point implements Comparable<Point> {
    * @param p
    * @return
    */
-  public int det(Point p) {
+  public double det(Point p) {
     return x * p.y - y * p.x;
   }
 
@@ -29,7 +29,20 @@ class Point implements Comparable<Point> {
    * @param p
    * @return
    */
-  public int dot(Point p) {
+  public double dot(Point p) {
     return x * p.x + y * p.y;
   }
+
+  public Point sub(Point p) {
+    return new Point(x - p.x, y - p.y);
+  }
+
+  public Point add(Point p) {
+    return new Point(x + p.x, y + p.y);
+  }
+
+  public Point multiply(double d) {
+    return new Point(x * d, y * d);
+  }
+
 }

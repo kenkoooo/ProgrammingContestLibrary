@@ -45,7 +45,7 @@ public class ConvexHull {
    * @param t
    * @return
    */
-  public static int counterClockWise(Point a, Point b, Point t) {
+  public static double counterClockWise(Point a, Point b, Point t) {
     return (t.x - a.x) * (b.y - a.y) - (b.x - a.x) * (t.y - a.y);
   }
 }
