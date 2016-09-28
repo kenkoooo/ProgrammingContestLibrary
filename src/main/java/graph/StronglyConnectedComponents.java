@@ -2,6 +2,7 @@ package graph;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class StronglyConnectedComponents {
@@ -41,7 +42,7 @@ public class StronglyConnectedComponents {
         }
       }
 
-    used = new boolean[V];
+    Arrays.fill(used, false);
     int k = 0;
     Collections.reverse(vs);
     for (int i : vs)
