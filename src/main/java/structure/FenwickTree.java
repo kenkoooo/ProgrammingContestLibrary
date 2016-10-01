@@ -18,7 +18,7 @@ public class FenwickTree {
   // [0, k)
   long sum(int k) {
     if (k >= N) k = N - 1;
-    int ret = 0;
+    long ret = 0;
     for (int x = k - 1; x >= 0; x = (x & (x + 1)) - 1) {
       ret += data[x];
     }

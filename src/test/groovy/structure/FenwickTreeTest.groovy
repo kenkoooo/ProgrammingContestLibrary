@@ -11,7 +11,7 @@ class FenwickTreeTest extends Specification {
             FenwickTree tree = new FenwickTree(N)
             int[] data = new int[N]
             for (int i = 0; i < N; i++) {
-                data[i] = random.nextInt((int) 1e6)
+                data[i] = random.nextInt((int) 1e9)
                 tree.add(i, data[i])
             }
             for (int i = 0; i < N; i++) {
