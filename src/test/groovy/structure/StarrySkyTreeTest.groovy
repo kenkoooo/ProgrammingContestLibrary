@@ -22,7 +22,7 @@ class StarrySkyTreeTest extends Specification {
                 r = random.nextInt(N)
             }
 
-            int x = random.nextInt()
+            long x = random.nextInt() * 100L
 
             if (random.nextBoolean()) {
                 // Add

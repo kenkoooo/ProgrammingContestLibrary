@@ -15,7 +15,7 @@ public class StarrySkyTree {
     Arrays.fill(segMax, -INF);
   }
 
-  public void add(int a, int b, int x) {
+  public void add(int a, int b, long x) {
     add(a, b, x, 0, 0, N);
   }
 
