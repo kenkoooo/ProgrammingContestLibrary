@@ -1,29 +1,24 @@
 package graph;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BiconnectedComponents {
-  static class Edge {
-    int to;
-    Edge(int to) {
-      this.to = to;
-    }
-  }
+
 
   private int[] order;
-  private ArrayDeque<Integer> stack = new ArrayDeque<>();
-  private ArrayDeque<Integer> path = new ArrayDeque<>();
+  private int[] stack;
+  private int[] path;
+  private int s = 0, t = 0;
   private boolean[] inStack;
   private int idx;
   private int k;
-  private final ArrayList<ArrayList<Edge>> G;
+  private final ArrayList<ArrayList<Integer>> G;
 
   public ArrayList<int[]> bridges = new ArrayList<>();
   public int[] cmp;
 
-  BiconnectedComponents(ArrayList<ArrayList<Edge>> g) {
+  BiconnectedComponents(ArrayList<ArrayList<Integer>> g) {
     int n = g.size();
     this.G = g;
     idx = 0;
@@ -32,6 +27,8 @@ public class BiconnectedComponents {
     Arrays.fill(order, -1);
     inStack = new boolean[n];
     cmp = new int[n];
+    stack = new int[n];
+    path = new int[n];
 
     for (int v = 0; v < n; v++) {
       if (order[v] == -1) {
@@ -45,28 +42,28 @@ public class BiconnectedComponents {
 
   private void dfs(int v, int p) {
     order[v] = idx++;
-    stack.addLast(v);
+    stack[s++] = v;
     inStack[v] = true;
-    path.addLast(v);
-    for (Edge e : G.get(v)) {
-      if (e.to == p) continue;
+    path[t++] = v;
+    for (Integer to : G.get(v)) {
+      if (to == p) continue;
 
-      if (order[e.to] == -1)
-        dfs(e.to, v);
-      else if (inStack[e.to])
-        while (order[path.peekLast()] > order[e.to]) path.pollLast();
+      if (order[to] == -1)
+        dfs(to, v);
+      else if (inStack[to])
+        while (order[path[t - 1]] > order[to]) t--;
     }
 
-    if (v == path.peekLast()) {
+    if (v == path[t - 1]) {
       bridges.add(new int[]{p, v});
       while (true) {
-        int w = stack.pollLast();
+        int w = stack[--s];
         inStack[w] = false;
         cmp[w] = k;
         if (v == w) break;
       }
-      path.pollLast();
-      ++k;
+      t--;
+      k++;
     }
   }
 }

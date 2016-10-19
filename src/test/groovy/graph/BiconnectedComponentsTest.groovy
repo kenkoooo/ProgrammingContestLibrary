@@ -6,9 +6,9 @@ class BiconnectedComponentsTest extends Specification {
     def "心温まる手作り"() {
         setup:
         int N = 10
-        ArrayList<ArrayList<BiconnectedComponents.Edge>> graph = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
         for (int i = 0; i < N; i++) {
-            graph.add(new ArrayList<BiconnectedComponents.Edge>());
+            graph.add(new ArrayList<Integer>());
         }
 
         def edges = [
@@ -27,8 +27,8 @@ class BiconnectedComponentsTest extends Specification {
         edges.each { a ->
             int u = a[1]
             int v = a[0]
-            graph.get(a[0]).add(new BiconnectedComponents.Edge(u))
-            graph.get(a[1]).add(new BiconnectedComponents.Edge(v))
+            graph.get(a[0]).add(new Integer(u))
+            graph.get(a[1]).add(new Integer(v))
         }
 
         BiconnectedComponents bicc = new BiconnectedComponents(graph)
