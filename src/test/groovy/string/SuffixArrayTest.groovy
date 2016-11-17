@@ -37,7 +37,40 @@ class SuffixArrayTest extends Specification {
                 assert array.lowerBound(x) == -1
             }
         }
+    }
 
+    def "lowerBound & upperBound のテスト"() {
+        setup:
+        Random random = new Random();
+        ArrayList<String> list = new ArrayList<>()
+        int N = 10
+        for (int n = 0; n < N; n++) {
+            String x = ""
+            for (int i = 0; i < N; i++) {
+                char c = 'a'
+                c += random.nextInt(26)
+                x += c
+            }
+            list.add(x);
+        }
+
+        String large = ""
+        for (String s : list) large += s;
+        large += large
+
+        SuffixArray suffixArray = new SuffixArray(large)
+
+        for (String s : list) {
+            int lower = suffixArray.lowerBound(s)
+            int upper = suffixArray.upperBound(s)
+            int l = suffixArray.sa.get(lower)
+            int u = suffixArray.sa.get(upper - 1)
+            assert lower < upper
+            String sub1 = large.subSequence(l, l + s.length())
+            String sub2 = large.subSequence(u, u + s.length())
+            assert sub1 == s
+            assert sub2 == s
+        }
     }
 
     def "abracadabra"() {

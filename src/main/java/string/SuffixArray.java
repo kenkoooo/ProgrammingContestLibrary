@@ -64,10 +64,11 @@ public class SuffixArray {
   }
 
   public int upperBound(String t) {
-    int a = -1, b = S.length();
+    int a = -1, b = S.length() - 1;
     while (b - a > 1) {
       int c = (a + b) / 2;
-      if (S.substring(sa.get(c)).compareTo(t) <= 0)
+      String sub = S.substring(sa.get(c), Math.min(t.length() + sa.get(c), S.length()));
+      if (sub.compareTo(t) <= 0)
         a = c;
       else
         b = c;
