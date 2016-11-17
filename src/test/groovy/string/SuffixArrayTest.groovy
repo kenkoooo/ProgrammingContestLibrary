@@ -66,6 +66,7 @@ class SuffixArrayTest extends Specification {
             int l = suffixArray.sa.get(lower)
             int u = suffixArray.sa.get(upper - 1)
             assert lower < upper
+            assert Math.abs(l - u) == N * N
             String sub1 = large.subSequence(l, l + s.length())
             String sub2 = large.subSequence(u, u + s.length())
             assert sub1 == s

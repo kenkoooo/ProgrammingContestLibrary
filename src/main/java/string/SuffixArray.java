@@ -64,7 +64,7 @@ public class SuffixArray {
   }
 
   public int upperBound(String t) {
-    int a = -1, b = S.length() - 1;
+    int a = -1, b = S.length();
     while (b - a > 1) {
       int c = (a + b) / 2;
       String sub = S.substring(sa.get(c), Math.min(t.length() + sa.get(c), S.length()));
