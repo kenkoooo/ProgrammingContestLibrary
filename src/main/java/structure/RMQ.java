@@ -20,7 +20,7 @@ public class RMQ {
     Arrays.fill(seg, INF);
   }
 
-  void update(int k, long value) {
+  public void update(int k, long value) {
     seg[k += N - 1] = value;
     while (k > 0) {
       k = (k - 1) / 2;
