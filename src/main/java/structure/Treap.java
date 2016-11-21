@@ -5,7 +5,7 @@ import java.util.Random;
 public class Treap {
   Random random = new Random();
 
-  class Node {
+  private class Node {
     Node left, right;
     long key;
     int priority;
@@ -20,17 +20,25 @@ public class Treap {
     }
   }
 
-  Node root = null;
+  private Node root = null;
 
-  int count(Node n) {
+  public void clear() {
+    root = null;
+  }
+
+  public boolean isEmpty() {
+    return count(root) == 0;
+  }
+
+  private int count(Node n) {
     return n == null ? 0 : n.count;
   }
 
-  void update(Node c) {
+  private void update(Node c) {
     c.count = 1 + count(c.left) + count(c.right);
   }
 
-  Node leftRotate(Node c) {
+  private Node leftRotate(Node c) {
     Node r = c.right;
     c.right = r.left;
     r.left = c;
@@ -38,7 +46,7 @@ public class Treap {
     return r;
   }
 
-  Node rightRotate(Node c) {
+  private Node rightRotate(Node c) {
     Node l = c.left;
     c.left = l.right;
     l.right = c;
@@ -46,7 +54,7 @@ public class Treap {
     return l;
   }
 
-  Node insert(Node c, long key) {
+  private Node insert(Node c, long key) {
     if (c == null) return new Node(key);
     if (c.key < key) {
       c.right = insert(c.right, key);
@@ -59,12 +67,12 @@ public class Treap {
     return c;
   }
 
-  Node getMinNode(Node c) {
+  private Node getMinNode(Node c) {
     while (c.left != null) c = c.left;
     return c;
   }
 
-  Node erase(Node c, long key) {
+  private Node erase(Node c, long key) {
     if (key == c.key) {
       if (c.left == null) return c.right;
       if (c.right == null) return c.left;
@@ -80,28 +88,28 @@ public class Treap {
     return c;
   }
 
-  void insert(long key) {
+  public void insert(long key) {
     if (contains(key)) return;
     root = insert(root, key);
   }
 
-  void erase(long key) {
+  public void erase(long key) {
     root = erase(root, key);
   }
 
-  int size() {
+  public int size() {
     return count(root);
   }
 
-  boolean contains(long key) {
+  public boolean contains(long key) {
     return find(root, key) >= 0;
   }
 
-  int find(long key) {
+  public int find(long key) {
     return find(root, key);
   }
 
-  int find(Node c, long key) {
+  private int find(Node c, long key) {
     if (c == null) return -1;
     if (c.key == key) return count(c.left);
     if (key < c.key) return find(c.left, key);
@@ -110,7 +118,7 @@ public class Treap {
     return count(c.left) + 1 + pos;
   }
 
-  Node rank(Node c, int rank) {
+  private Node rank(Node c, int rank) {
     while (c != null) {
       int leftCount = count(c.left);
       if (leftCount == rank) return c;
@@ -121,11 +129,16 @@ public class Treap {
         c = c.left;
       }
     }
-    return c;
+    return null;
   }
 
-  long rank(int rank) {
-    return rank(root, rank).key;
+  public long rank(int rank) {
+    if (root == null)
+      throw new NullPointerException();
+    Node r = rank(root, rank);
+    if (r == null)
+      throw new NullPointerException();
+    return r.key;
   }
 
 }
