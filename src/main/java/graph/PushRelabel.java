@@ -5,8 +5,9 @@ import java.util.ArrayList;
 
 public class PushRelabel {
   class Edge {
-    int from, to, cap, flow, rev;
-    Edge(int from, int to, int cap, int flow, int rev) {
+    int from, to, rev;
+    long flow, cap;
+    Edge(int from, int to, long cap, long flow, int rev) {
       this.from = from;
       this.to = to;
       this.cap = cap;
@@ -31,20 +32,19 @@ public class PushRelabel {
     count = new int[N * 2];
   }
 
-  private void push(Edge e) {
-    long pushableFlow = Math.min(excess[e.from], e.cap - e.flow);
-    if (height[e.from] <= height[e.to] || pushableFlow == 0) return;
-
-    e.flow += pushableFlow;
-    graph.get(e.to).get(e.rev).flow -= pushableFlow;
-    excess[e.to] += pushableFlow;
-    excess[e.from] -= pushableFlow;
-    enqueue(e.to);
-  }
-
   void addEdge(int from, int to, int cap) {
     graph.get(from).add(new Edge(from, to, cap, 0, graph.get(to).size()));
     graph.get(to).add(new Edge(to, from, 0, 0, graph.get(from).size() - 1));
+  }
+
+  private void push(Edge e) {
+    long send = Math.min(excess[e.from], e.cap - e.flow);
+    if (height[e.from] <= height[e.to] || send == 0) return;
+    e.flow += send;
+    graph.get(e.to).get(e.rev).flow -= send;
+    excess[e.from] -= send;
+    excess[e.to] += send;
+    enqueue(e.to);
   }
 
   private void discharge(int u) {
@@ -78,7 +78,7 @@ public class PushRelabel {
     }
   }
 
-  void relabel(int v) {
+  private void relabel(int v) {
     count[height[v]]--;
     height[v] = 2 * N;
     for (Edge e : graph.get(v))

@@ -15,20 +15,18 @@ public class RelabelToFront {
     }
   }
 
-  int V;
+  int N;
   ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
-  long[] excess;
-  int[] height;
-  int[] current;
-  int[] seen;
+  private long[] excess;
+  private int[] height;
+  private int[] seen;
 
-  RelabelToFront(int V) {
-    this.V = V;
-    for (int i = 0; i < V; i++) graph.add(new ArrayList<>());
-    excess = new long[V];
-    height = new int[V];
-    current = new int[V];
-    seen = new int[V];
+  RelabelToFront(int N) {
+    this.N = N;
+    for (int i = 0; i < N; i++) graph.add(new ArrayList<>());
+    excess = new long[N];
+    height = new int[N];
+    seen = new int[N];
   }
 
   void addEdge(int from, int to, long cap) {
@@ -36,7 +34,7 @@ public class RelabelToFront {
     graph.get(to).add(new Edge(to, from, 0, graph.get(from).size() - 1));
   }
 
-  void push(Edge e) {
+  private void push(Edge e) {
     long send = Math.min(excess[e.from], e.cap - e.flow);
     e.flow += send;
     graph.get(e.to).get(e.rev).flow -= send;
@@ -44,13 +42,15 @@ public class RelabelToFront {
     excess[e.to] += send;
   }
 
-  void relabel(int u) {
-    int minHeight = V * 2;
-    for (Edge e : graph.get(u)) if (e.cap - e.flow > 0) minHeight = Math.min(minHeight, height[e.to]);
+  private void relabel(int u) {
+    int minHeight = N * 2;
+    for (Edge e : graph.get(u))
+      if (e.cap - e.flow > 0)
+        minHeight = Math.min(minHeight, height[e.to]);
     height[u] = minHeight + 1;
   }
 
-  void discharge(int u) {
+  private void discharge(int u) {
     while (excess[u] > 0) {
       if (seen[u] < graph.get(u).size()) {
         Edge e = graph.get(u).get(seen[u]);
@@ -65,7 +65,7 @@ public class RelabelToFront {
     }
   }
 
-  void moveToFront(int i, ArrayList<Integer> list) {
+  private void moveToFront(int i, ArrayList<Integer> list) {
     int t = list.get(i);
     list.remove(i);
     list.add(0, t);
@@ -73,10 +73,10 @@ public class RelabelToFront {
 
   long maxFlow(int source, int sink) {
     ArrayList<Integer> list = new ArrayList<>();
-    for (int i = 0; i < V; i++) {
+    for (int i = 0; i < N; i++) {
       if (i != source && i != sink) list.add(i);
     }
-    height[source] = V;
+    height[source] = N;
     for (Edge e : graph.get(source)) {
       excess[source] += e.cap;
       push(e);
