@@ -6,8 +6,9 @@ import java.util.Arrays;
 
 public class Dinitz {
   class Edge {
-    int to, cap, rev;
-    Edge(int to, int cap, int rev) {
+    int to, rev;
+    long cap;
+    Edge(int to, long cap, int rev) {
       this.to = to;
       this.cap = cap;
       this.rev = rev;
@@ -21,22 +22,22 @@ public class Dinitz {
 
   Dinitz(int V) {
     g = new ArrayList<>(V);
-    for (int i = 0; i < V; i++) g.add(new ArrayList<Edge>());
+    for (int i = 0; i < V; i++) g.add(new ArrayList<>());
     level = new int[V];
     iter = new int[V];
   }
 
-  void addEdge(int from, int to, int cap) {
+  void addEdge(int from, int to, long cap) {
     g.get(from).add(new Edge(to, cap, g.get(to).size()));
     g.get(to).add(new Edge(from, 0, g.get(from).size() - 1));
   }
 
-  private int dfs(int v, int t, int f) {
+  private long dfs(int v, int t, long f) {
     if (v == t) return f;
     for (; iter[v] < g.get(v).size(); iter[v]++) {
       Edge e = g.get(v).get(iter[v]);
       if (e.cap > 0 && level[v] < level[e.to]) {
-        int d = dfs(e.to, t, Math.min(f, e.cap));
+        long d = dfs(e.to, t, Math.min(f, e.cap));
         if (d > 0) {
           e.cap -= d;
           g.get(e.to).get(e.rev).cap += d;
@@ -62,14 +63,14 @@ public class Dinitz {
     }
   }
 
-  int maxFlow(int s, int t) {
-    int flow = 0;
+  long maxFlow(int s, int t) {
+    long flow = 0;
     for (; ; ) {
       bfs(s);
       if (level[t] < 0) return flow;
       Arrays.fill(iter, 0);
-      int f;
-      while ((f = dfs(s, t, Integer.MAX_VALUE)) > 0) {
+      long f;
+      while ((f = dfs(s, t, Long.MAX_VALUE)) > 0) {
         flow += f;
       }
     }
