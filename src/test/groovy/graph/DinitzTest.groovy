@@ -49,4 +49,32 @@ class DinitzTest extends Specification {
             assert answers.get(i) == check.poll()
         }
     }
+
+    def "Solve AOJ GRL_6_A"() {
+        setup:
+        ArrayDeque<String> input = TestUtils.parseResourceInput(getClass(), "GRL_6_A.in")
+
+        when:
+        int testCaseNum = Integer.parseInt(input.poll())
+        ArrayDeque<String> ans = new ArrayDeque<>()
+        testCaseNum.times {
+            int V = Integer.parseInt(input.poll())
+            int E = Integer.parseInt(input.poll())
+            Dinitz dinitz = new Dinitz(V)
+            E.times {
+                int u = Integer.parseInt(input.poll())
+                int v = Integer.parseInt(input.poll())
+                int c = Integer.parseInt(input.poll())
+                dinitz.addEdge(u, v, c)
+            }
+            ans.add(String.valueOf(dinitz.maxFlow(0, V - 1)))
+        }
+
+        then:
+        ArrayDeque<String> output = TestUtils.parseResourceInput(getClass(), "GRL_6_A.out")
+        int size = Integer.parseInt(output.poll())
+        size.times {
+            assert ans.poll() == output.poll()
+        }
+    }
 }
