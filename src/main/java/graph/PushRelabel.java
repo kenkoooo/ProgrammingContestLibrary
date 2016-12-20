@@ -31,7 +31,7 @@ public class PushRelabel {
     count = new int[N * 2];
   }
 
-  void push(Edge e) {
+  private void push(Edge e) {
     long pushableFlow = Math.min(excess[e.from], e.cap - e.flow);
     if (height[e.from] <= height[e.to] || pushableFlow == 0) return;
 
@@ -52,6 +52,7 @@ public class PushRelabel {
       if (excess[u] == 0) break;
       push(e);
     }
+
     if (excess[u] > 0) {
       if (count[height[u]] == 1)
         gap(height[u]);
