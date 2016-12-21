@@ -68,9 +68,8 @@ public class RelabelToFront {
     }
   }
 
-  private void moveToFront(int i) {
-    int t = list.get(i);
-    list.add(0, t);
+  private void moveToFront(int u) {
+    list.add(0, u);
   }
 
   private void init(int source, int sink) {
@@ -108,7 +107,7 @@ public class RelabelToFront {
       int oldHeight = height[u];
       discharge(u);
       if (height[u] > oldHeight) {
-        moveToFront(p);
+        moveToFront(u);
         p = 0;
         turn++;
       } else
