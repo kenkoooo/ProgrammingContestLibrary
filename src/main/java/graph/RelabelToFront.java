@@ -54,7 +54,7 @@ public class RelabelToFront {
     while (excess[u] > 0) {
       if (seen[u] < graph.get(u).size()) {
         Edge e = graph.get(u).get(seen[u]);
-        if (e.cap - e.flow > 0 && height[u] > height[e.to])
+        if (e.cap - e.flow > 0 && height[u] == height[e.to] + 1)
           push(e);
         else
           seen[u] += 1;
