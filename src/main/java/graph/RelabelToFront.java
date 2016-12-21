@@ -16,7 +16,7 @@ public class RelabelToFront {
   }
 
   int N;
-  ArrayList<Integer> list = new ArrayList<>();
+  private ArrayList<Integer> list = new ArrayList<>();
   ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
   private long[] excess;
   private int[] height;
@@ -66,7 +66,7 @@ public class RelabelToFront {
     }
   }
 
-  private void moveToFront(int i, ArrayList<Integer> list) {
+  private void moveToFront(int i) {
     int t = list.get(i);
     list.remove(i);
     list.add(0, t);
@@ -83,16 +83,24 @@ public class RelabelToFront {
     }
   }
 
+  private int size() {
+    return list.size();
+  }
+
+  private int get(int p) {
+    return list.get(p);
+  }
+
   long maxFlow(int source, int sink) {
     init(source, sink);
 
     int p = 0;
-    while (p < list.size()) {
-      int u = list.get(p);
+    while (p < size()) {
+      int u = get(p);
       int oldHeight = height[u];
       discharge(u);
       if (height[u] > oldHeight) {
-        moveToFront(p, list);
+        moveToFront(p);
         p = 0;
       } else
         p += 1;
