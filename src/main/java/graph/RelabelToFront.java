@@ -1,6 +1,8 @@
 package graph;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class RelabelToFront {
   class Edge {
@@ -15,18 +17,12 @@ public class RelabelToFront {
     }
   }
 
-  int N;
-  ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
+  private int N;
+  private ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
   private long[] excess;
   private int[] height;
   private int[] seen;
-
-  PriorityQueue<int[]> queue = new PriorityQueue<>(new Comparator<int[]>() {
-    @Override
-    public int compare(int[] o1, int[] o2) {
-      return -Integer.compare(o1[0], o2[0]);
-    }
-  });
+  private PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(o -> -o[0]));
 
   RelabelToFront(int N) {
     this.N = N;
@@ -36,7 +32,7 @@ public class RelabelToFront {
     seen = new int[N];
   }
 
-  void addEdge(int from, int to, long cap) {
+  public void addEdge(int from, int to, long cap) {
     graph.get(from).add(new Edge(from, to, cap, graph.get(to).size()));
     graph.get(to).add(new Edge(to, from, 0, graph.get(from).size() - 1));
   }
@@ -80,7 +76,7 @@ public class RelabelToFront {
     }
   }
 
-  long maxFlow(int source, int sink) {
+  public long maxFlow(int source, int sink) {
     height[source] = N;
     for (Edge e : graph.get(source)) {
       excess[source] += e.cap;
@@ -90,7 +86,6 @@ public class RelabelToFront {
     while (!queue.isEmpty()) {
       int[] q = queue.poll();
       int u = q[1];
-      if (excess[u] == 0) continue;
       if (u == source || u == sink) continue;
       discharge(u);
     }
