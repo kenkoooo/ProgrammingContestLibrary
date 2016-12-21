@@ -17,8 +17,6 @@ public class RelabelToFront {
 
   int N;
   ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
-  ArrayList<Integer> queue = new ArrayList<>();
-  private int[] turns;
   private long[] excess;
   private int[] height;
   private int[] seen;
@@ -29,7 +27,6 @@ public class RelabelToFront {
     excess = new long[N];
     height = new int[N];
     seen = new int[N];
-    turns = new int[N];
   }
 
   void addEdge(int from, int to, long cap) {
@@ -57,7 +54,7 @@ public class RelabelToFront {
     while (excess[u] > 0) {
       if (seen[u] < graph.get(u).size()) {
         Edge e = graph.get(u).get(seen[u]);
-        if (e.cap - e.flow > 0 && height[u] == height[e.to] + 1)
+        if (e.cap - e.flow > 0 && height[u] > height[e.to])
           push(e);
         else
           seen[u] += 1;
@@ -68,46 +65,30 @@ public class RelabelToFront {
     }
   }
 
-  private void moveToFront(int u) {
-    queue.add(u);
+  private void moveToFront(int i, ArrayList<Integer> list) {
+    int t = list.get(i);
+    list.remove(i);
+    list.add(0, t);
   }
 
-  private int size() {
-    return queue.size();
-  }
-
-  private int get(int p) {
-    return queue.get(queue.size() - 1 - p);
-  }
-
-  private void init(int source, int sink) {
+  long maxFlow(int source, int sink) {
+    ArrayList<Integer> list = new ArrayList<>();
     for (int i = 0; i < N; i++) {
-      if (i != source && i != sink) queue.add(i);
+      if (i != source && i != sink) list.add(i);
     }
     height[source] = N;
     for (Edge e : graph.get(source)) {
       excess[source] += e.cap;
       push(e);
     }
-  }
-
-  long maxFlow(int source, int sink) {
-    init(source, sink);
 
     int p = 0;
-    int turn = 1;
-    while (p < size()) {
-      int u = get(p);
-      if (turns[u] == turn) {
-        p++;
-        continue;
-      }
-      turns[u] = turn;
-
+    while (p < list.size()) {
+      int u = list.get(p);
       int oldHeight = height[u];
       discharge(u);
       if (height[u] > oldHeight) {
-        moveToFront(u);
+        moveToFront(p, list);
         p = 0;
       } else
         p += 1;
