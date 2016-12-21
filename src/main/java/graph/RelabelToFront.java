@@ -1,6 +1,8 @@
 package graph;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class RelabelToFront {
   class Edge {
@@ -65,14 +67,8 @@ public class RelabelToFront {
     }
   }
 
-  private void moveToFront(int i, ArrayList<Integer> list) {
-    int t = list.get(i);
-    list.remove(i);
-    list.add(0, t);
-  }
-
   long maxFlow(int source, int sink) {
-    ArrayList<Integer> list = new ArrayList<>();
+    LinkedList<Integer> list = new LinkedList<>();
     for (int i = 0; i < N; i++) {
       if (i != source && i != sink) list.add(i);
     }
@@ -82,17 +78,22 @@ public class RelabelToFront {
       push(e);
     }
 
-    int p = 0;
-    while (p < list.size()) {
-      int u = list.get(p);
-      int oldHeight = height[u];
-      discharge(u);
-      if (height[u] > oldHeight) {
-        moveToFront(p, list);
-        p = 0;
-      } else
-        p += 1;
+    while (true) {
+      boolean finish = true;
+      for (Iterator<Integer> it = list.iterator(); it.hasNext(); ) {
+        int u = it.next();
+        int oldHeight = height[u];
+        discharge(u);
+        if (height[u] > oldHeight) {
+          it.remove();
+          list.add(0, u);
+          finish = false;
+          break;
+        }
+      }
+      if (finish) break;
     }
+
     long maxFlow = 0;
     for (Edge e : graph.get(source)) maxFlow += e.flow;
 
