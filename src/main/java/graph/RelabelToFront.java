@@ -69,7 +69,7 @@ public class RelabelToFront {
   }
 
   private void moveToFront(int u) {
-    list.add(0, u);
+    list.add(u);
   }
 
   private void init(int source, int sink) {
@@ -88,7 +88,7 @@ public class RelabelToFront {
   }
 
   private int get(int p) {
-    return list.get(p);
+    return list.get(list.size() - 1 - p);
   }
 
   long maxFlow(int source, int sink) {
