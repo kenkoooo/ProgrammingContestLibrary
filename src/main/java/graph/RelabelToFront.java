@@ -21,6 +21,7 @@ public class RelabelToFront {
   private long[] excess;
   private int[] height;
   private int[] seen;
+  private int[] turns;
 
   RelabelToFront(int N) {
     this.N = N;
@@ -28,6 +29,7 @@ public class RelabelToFront {
     excess = new long[N];
     height = new int[N];
     seen = new int[N];
+    turns = new int[N];
   }
 
   void addEdge(int from, int to, long cap) {
@@ -68,7 +70,6 @@ public class RelabelToFront {
 
   private void moveToFront(int i) {
     int t = list.get(i);
-    list.remove(i);
     list.add(0, t);
   }
 
@@ -95,13 +96,21 @@ public class RelabelToFront {
     init(source, sink);
 
     int p = 0;
+    int turn = 1;
     while (p < size()) {
       int u = get(p);
+      if (turns[u] == turn) {
+        p++;
+        continue;
+      }
+      turns[u] = turn;
+
       int oldHeight = height[u];
       discharge(u);
       if (height[u] > oldHeight) {
         moveToFront(p);
         p = 0;
+        turn++;
       } else
         p += 1;
     }
