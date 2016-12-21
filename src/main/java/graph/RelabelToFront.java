@@ -78,20 +78,16 @@ public class RelabelToFront {
       push(e);
     }
 
-    while (true) {
-      boolean finish = true;
-      for (Iterator<Integer> it = list.iterator(); it.hasNext(); ) {
-        int u = it.next();
-        int oldHeight = height[u];
-        discharge(u);
-        if (height[u] > oldHeight) {
-          it.remove();
-          list.add(0, u);
-          finish = false;
-          break;
-        }
+    Iterator<Integer> it = list.iterator();
+    while (it.hasNext()) {
+      int u = it.next();
+      int oldHeight = height[u];
+      discharge(u);
+      if (height[u] > oldHeight) {
+        it.remove();
+        list.add(0, u);
+        it = list.iterator();
       }
-      if (finish) break;
     }
 
     long maxFlow = 0;
