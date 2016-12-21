@@ -1,8 +1,6 @@
 package graph;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 public class RelabelToFront {
   class Edge {
@@ -22,6 +20,7 @@ public class RelabelToFront {
   private long[] excess;
   private int[] height;
   private int[] seen;
+  PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(o -> -o[1]));
 
   RelabelToFront(int N) {
     this.N = N;
@@ -49,7 +48,10 @@ public class RelabelToFront {
     for (Edge e : graph.get(u))
       if (e.cap - e.flow > 0)
         minHeight = Math.min(minHeight, height[e.to]);
-    height[u] = minHeight + 1;
+    if (height[u] != minHeight + 1) {
+      height[u] = minHeight + 1;
+      queue.add(new int[]{u, height[u]});
+    }
   }
 
   private void discharge(int u) {
@@ -68,9 +70,8 @@ public class RelabelToFront {
   }
 
   long maxFlow(int source, int sink) {
-    LinkedList<Integer> list = new LinkedList<>();
     for (int i = 0; i < N; i++) {
-      if (i != source && i != sink) list.add(i);
+      if (i != source && i != sink) queue.add(new int[]{i, 0});
     }
     height[source] = N;
     for (Edge e : graph.get(source)) {
@@ -78,15 +79,14 @@ public class RelabelToFront {
       push(e);
     }
 
-    Iterator<Integer> it = list.iterator();
-    while (it.hasNext()) {
-      int u = it.next();
+    while (!queue.isEmpty()) {
+      int[] q = queue.poll();
+      int u = q[0];
+      if (q[1] != height[u]) continue;
       int oldHeight = height[u];
       discharge(u);
       if (height[u] > oldHeight) {
-        it.remove();
-        list.add(0, u);
-        it = list.iterator();
+        queue.add(new int[]{u, height[u]});
       }
     }
 
