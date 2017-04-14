@@ -2,14 +2,14 @@ package graph
 
 import spock.lang.Specification
 
-class DynamicPrunedLandmarkLabelingTest extends Specification {
+class PrunedLandmarkLabelingTest extends Specification {
     def "構築チェック"() {
         setup:
         int N = 500
         int INF = 1000
         Random random = new Random()
         int[][] dist = new int[N][N]
-        ArrayList<DynamicPrunedLandmarkLabeling.Edge>[] G = new ArrayList<DynamicPrunedLandmarkLabeling.Edge>[N];
+        ArrayList<PrunedLandmarkLabeling.Edge>[] G = new ArrayList<PrunedLandmarkLabeling.Edge>[N];
         for (int i = 0; i < N; i++) {
             G[i] = new ArrayList();
             Arrays.fill(dist[i], INF)
@@ -27,13 +27,13 @@ class DynamicPrunedLandmarkLabelingTest extends Specification {
             for (int j = 0; j < N; j++) {
                 if (i == j) continue
                 if (dist[i][j] == INF) continue
-                DynamicPrunedLandmarkLabeling.Edge edge = new DynamicPrunedLandmarkLabeling.Edge(j, dist[i][j])
+                PrunedLandmarkLabeling.Edge edge = new PrunedLandmarkLabeling.Edge(j, dist[i][j])
                 G[i].add(edge)
             }
         }
 
         then:
-        DynamicPrunedLandmarkLabeling pll = new DynamicPrunedLandmarkLabeling(G)
+        PrunedLandmarkLabeling pll = new PrunedLandmarkLabeling(G)
         for (int i = 0; i < N; i++) {
             dist[i][i] = 0
         }

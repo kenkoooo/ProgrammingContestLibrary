@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 @SuppressWarnings("unchecked")
-public class DynamicPrunedLandmarkLabeling {
+public class PrunedLandmarkLabeling {
   private static int INF = (int) 1e9;
 
   public static class Edge implements Comparable<Edge> {
@@ -64,7 +64,7 @@ public class DynamicPrunedLandmarkLabeling {
   private ArrayList<Edge>[][] G = new ArrayList[2][];
   private Index[][] idx = new Index[2][];
 
-  DynamicPrunedLandmarkLabeling(ArrayList<Edge>[] g) {
+  PrunedLandmarkLabeling(ArrayList<Edge>[] g) {
     numV = g.length;
     rank = new int[numV];
     inv = new int[numV];
