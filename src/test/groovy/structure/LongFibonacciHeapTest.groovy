@@ -2,10 +2,10 @@ package structure
 
 import spock.lang.Specification
 
-class FibonacciHeapTest extends Specification {
+class LongFibonacciHeapTest extends Specification {
     def "random test"() {
         given:
-        FibonacciHeap heap = new FibonacciHeap()
+        LongFibonacciHeap heap = new LongFibonacciHeap()
         PriorityQueue<Long> queue = new PriorityQueue<>()
         Random random = new Random()
 
@@ -24,8 +24,8 @@ class FibonacciHeapTest extends Specification {
 
     def "merge test"() {
         given:
-        FibonacciHeap heap1 = new FibonacciHeap()
-        FibonacciHeap heap2 = new FibonacciHeap()
+        LongFibonacciHeap heap1 = new LongFibonacciHeap()
+        LongFibonacciHeap heap2 = new LongFibonacciHeap()
         PriorityQueue<Long> queue = new PriorityQueue<>()
         Random random = new Random()
 
@@ -39,7 +39,7 @@ class FibonacciHeapTest extends Specification {
             }
         }
 
-        FibonacciHeap heap = FibonacciHeap.unite(heap1, heap2)
+        LongFibonacciHeap heap = LongFibonacciHeap.unite(heap1, heap2)
         while (!queue.isEmpty()) {
             def q = queue.poll()
             def h = heap.extractMinNode().key
