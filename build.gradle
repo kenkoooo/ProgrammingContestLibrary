@@ -17,6 +17,8 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
     testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
     testCompile 'com.athaydes:spock-reports:1.2.7'
+    compile group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.18'
+    compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.18'
 }
 
 task wrapper(type: Wrapper) {
