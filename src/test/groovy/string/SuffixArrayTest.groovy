@@ -105,7 +105,7 @@ class SuffixArrayTest extends Specification {
         }
     }
 
-    def "AOJ2644を解かせる2"() {
+    def "AOJ2644を解かせる"() {
         setup:
         def inQ = TestUtils.loadResourceFiles("AOJ2644/in", getClass())
         def outQ = TestUtils.loadResourceFiles("AOJ2644/out", getClass())
