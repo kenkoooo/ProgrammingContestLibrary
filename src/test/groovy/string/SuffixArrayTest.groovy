@@ -2,16 +2,12 @@ package string
 
 import spock.lang.Specification
 import structure.RMQ
-
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
-import java.util.stream.Stream
+import utils.TestUtils
 
 class SuffixArrayTest extends Specification {
     def "lowerBound 関数を contains として使う"() {
         setup:
-        Random random = new Random();
+        Random random = new Random()
         ArrayList<String> list = new ArrayList<>()
         int N = 10
         for (int n = 0; n < N; n++) {
@@ -21,11 +17,11 @@ class SuffixArrayTest extends Specification {
                 c += random.nextInt(26)
                 x += c
             }
-            list.add(x);
+            list.add(x)
         }
 
         String large = ""
-        for (String s : list) large += s;
+        for (String s : list) large += s
 
         SuffixArray array = new SuffixArray(large)
 
@@ -47,7 +43,7 @@ class SuffixArrayTest extends Specification {
 
     def "lowerBound & upperBound のテスト"() {
         setup:
-        Random random = new Random();
+        Random random = new Random()
         ArrayList<String> list = new ArrayList<>()
         int N = 10
         for (int n = 0; n < N; n++) {
@@ -57,11 +53,11 @@ class SuffixArrayTest extends Specification {
                 c += random.nextInt(26)
                 x += c
             }
-            list.add(x);
+            list.add(x)
         }
 
         String large = ""
-        for (String s : list) large += s;
+        for (String s : list) large += s
         large += large
 
         SuffixArray suffixArray = new SuffixArray(large)
@@ -109,84 +105,62 @@ class SuffixArrayTest extends Specification {
         }
     }
 
-    def "AOJ2644を解かせる"() {
+    def "AOJ2644を解かせる2"() {
         setup:
-        URI uri = getClass().getClassLoader().getResource("AOJ2644/in/").toURI()
-        Path myPath = Paths.get(uri);
-        Stream<Path> walk = Files.walk(myPath, 1);
-        ArrayList<String> files = new ArrayList<>();
-        for (Iterator<Path> it = walk.iterator(); it.hasNext();) {
-            files.add(it.next())
-        }
-        files.remove(0)
+        def inQ = new ArrayDeque<String>(TestUtils.loadResourceFiles("AOJ2644/in", getClass()))
+        def outQ = new ArrayDeque<String>(TestUtils.loadResourceFiles("AOJ2644/out", getClass()))
 
-        walk = Files.walk(Paths.get(getClass().getClassLoader().getResource("AOJ2644/out/").toURI()), 1);
-        ArrayList<String> outs = new ArrayList<>();
-        for (Iterator<Path> it = walk.iterator(); it.hasNext();) {
-            outs.add(it.next())
-        }
-        outs.remove(0)
+        def testcase = 0
+        while (!inQ.isEmpty()) {
+            String S = inQ.poll()
 
-        ArrayList<Integer> ansSizes = new ArrayList<>()
+            SuffixArray sa = new SuffixArray(S)
+            SuffixArray reverseSA = new SuffixArray(new StringBuilder(S).reverse().toString())
 
-        ArrayDeque<Integer> ans = new ArrayDeque<>()
-        for (String path : files) {
-            InputStream stream = new FileInputStream(path)
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream))
-
-            String S = reader.readLine()
-
-            SuffixArray sa = new SuffixArray(S);
-            SuffixArray reverseSA = new SuffixArray(new StringBuilder(S).reverse().toString());
-
-            int N = S.length();
-            RMQ rmq = new RMQ(N + 1);
-            RMQ reverseRMQ = new RMQ(N);
+            int N = S.length()
+            RMQ rmq = new RMQ(N + 1)
+            RMQ reverseRMQ = new RMQ(N)
             for (int i = 0; i <= N; i++) {
-                rmq.update(i, sa.sa[i]);
-                reverseRMQ.update(i, reverseSA.sa[i]);
+                rmq.update(i, sa.sa[i])
+                reverseRMQ.update(i, reverseSA.sa[i])
             }
 
-            int Q = Integer.parseInt(reader.readLine())
-            ansSizes.add(Q)
+            int Q = Integer.parseInt(inQ.poll())
+            def ans = new ArrayList<Long>()
             for (int q = 0; q < Q; q++) {
-                String[] xy = reader.readLine().split(" ");
-                String x = xy[0];
-                String y = new StringBuilder(xy[1]).reverse().toString();
+                String x = inQ.poll()
+                String y = new StringBuilder(inQ.poll()).reverse().toString()
 
 
-                int low = sa.lowerBound(x);
+                int low = sa.lowerBound(x)
                 if (low == -1) {
-                    ans.add(0);
-                    continue;
+                    ans.add(0)
+                    continue
                 }
-                int up = sa.upperBound(x);
+                int up = sa.upperBound(x)
 
-                int reverseLow = reverseSA.lowerBound(y);
+                int reverseLow = reverseSA.lowerBound(y)
                 if (reverseLow == -1) {
-                    ans.add(0);
-                    continue;
+                    ans.add(0)
+                    continue
                 }
-                int reverseUp = reverseSA.upperBound(y);
+                int reverseUp = reverseSA.upperBound(y)
 
-                long s = rmq.query(low, up);
-                long t = N - reverseRMQ.query(reverseLow, reverseUp);
+                long s = rmq.query(low, up)
+                long t = N - reverseRMQ.query(reverseLow, reverseUp)
                 if (s + x.length() <= t && s <= t - y.length()) {
-                    ans.add(t - s);
+                    ans.add(t - s)
                 } else {
-                    ans.add(0);
+                    ans.add(0)
                 }
             }
-        }
-        for (int i = 0; i < outs.size(); i++) {
-            String path = outs.get(i);
-            InputStream stream = new FileInputStream(path)
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream))
 
-            for (int q = 0; q < ansSizes.get(i); q++) {
-                int a = Integer.parseInt(reader.readLine())
-                assert a == ans.poll()
+            for (long a : ans) {
+                assert String.valueOf(a) == outQ.poll()
             }
+
+            println("Test ${testcase}: Accepted")
+            testcase++
         }
     }
 }
