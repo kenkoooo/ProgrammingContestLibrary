@@ -34,3 +34,23 @@ class TestUtils {
                 .collect()
     }
 }
+
+class TestCaseCounter {
+    Deque<String> inputDeque
+    int caseCount = -1
+
+    TestCaseCounter(Deque<String> inputDeque) {
+        this.inputDeque = inputDeque
+    }
+
+    boolean hasNext() {
+        if (caseCount >= 0) {
+            println("Test\t${caseCount}:\t[ ACCEPTED ]")
+        }
+        if (inputDeque.isEmpty()) {
+            return false
+        }
+        caseCount++
+        return true
+    }
+}

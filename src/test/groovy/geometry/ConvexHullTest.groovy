@@ -1,6 +1,7 @@
 package geometry
 
 import spock.lang.Specification
+import utils.TestCaseCounter
 import utils.TestUtils
 
 class ConvexHullTest extends Specification {
@@ -9,8 +10,8 @@ class ConvexHullTest extends Specification {
         def inQ = TestUtils.loadResourceFiles("AOJ-CGL_4_A/in", getClass())
         def outQ = TestUtils.loadResourceFiles("AOJ-CGL_4_A/out", getClass())
 
-        int testcase = 0
-        while (!inQ.isEmpty()) {
+        def counter = new TestCaseCounter(inQ)
+        while (counter.hasNext()) {
             int N = Integer.parseInt(inQ.poll())
             ArrayList<Point> ps = new ArrayList<>()
             for (int i = 0; i < N; i++) {
@@ -36,9 +37,6 @@ class ConvexHullTest extends Specification {
                 assert p.x == Double.parseDouble(outQ.poll())
                 assert p.y == Double.parseDouble(outQ.poll())
             }
-
-            println("Test ${testcase}: Accepted")
-            testcase++
         }
     }
 }

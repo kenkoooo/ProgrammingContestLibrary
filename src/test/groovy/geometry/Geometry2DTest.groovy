@@ -1,16 +1,18 @@
 package geometry
 
 import spock.lang.Specification
+import utils.TestCaseCounter
+import utils.TestUtils
 
 class Geometry2DTest extends Specification {
     class RailPoint implements Comparable<RailPoint> {
-        double x, y;
-        boolean above;
+        double x, y
+        boolean above
 
         RailPoint(double x, double y, boolean above) {
-            this.x = x;
-            this.y = y;
-            this.above = above;
+            this.x = x
+            this.y = y
+            this.above = above
         }
 
 
@@ -22,35 +24,32 @@ class Geometry2DTest extends Specification {
 
     def "AOJ2003を解かせる"() {
         setup:
-        for (int test = 1; test <= 4; test++) {
-            String filename = "AOJ2003/D" + String.valueOf(test)
-            InputStream stream = getClass().getClassLoader().getResourceAsStream(filename)
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream))
-            ArrayList<String> ans = new ArrayList<>()
+        def inQ = TestUtils.loadResourceFiles("AOJ2003/in", getClass())
+        def outQ = TestUtils.loadResourceFiles("AOJ2003/out", getClass())
 
-            int Q = Integer.parseInt(reader.readLine())
+        def counter = new TestCaseCounter(inQ)
+        while (counter.hasNext()) {
+            int Q = Integer.parseInt(inQ.poll())
             for (int q = 0; q < Q; q++) {
-                String[] line = reader.readLine().split(" ")
-                int xa = Integer.parseInt(line[0])
-                int ya = Integer.parseInt(line[1])
-                int xb = Integer.parseInt(line[2])
-                int yb = Integer.parseInt(line[3])
+                int xa = Integer.parseInt(inQ.poll())
+                int ya = Integer.parseInt(inQ.poll())
+                int xb = Integer.parseInt(inQ.poll())
+                int yb = Integer.parseInt(inQ.poll())
                 Point A = new Point(xa, ya)
                 Point B = new Point(xb, yb)
 
-                int N = Integer.parseInt(reader.readLine())
-                ArrayList<Point> above = new ArrayList<>();
-                ArrayList<Point> under = new ArrayList<>();
+                int N = Integer.parseInt(inQ.poll())
+                ArrayList<Point> above = new ArrayList<>()
+                ArrayList<Point> under = new ArrayList<>()
                 for (int i = 0; i < N; i++) {
-                    String[] line2 = reader.readLine().split(" ")
-                    int xs = Integer.parseInt(line2[0])
-                    int ys = Integer.parseInt(line2[1])
-                    int xt = Integer.parseInt(line2[2])
-                    int yt = Integer.parseInt(line2[3])
+                    int xs = Integer.parseInt(inQ.poll())
+                    int ys = Integer.parseInt(inQ.poll())
+                    int xt = Integer.parseInt(inQ.poll())
+                    int yt = Integer.parseInt(inQ.poll())
                     Point S = new Point(xs, ys)
                     Point T = new Point(xt, yt)
-                    int o = Integer.parseInt(line2[4])
-                    int l = Integer.parseInt(line2[5])
+                    int o = Integer.parseInt(inQ.poll())
+                    int l = Integer.parseInt(inQ.poll())
 
                     Point intersection = Geometry2D.lineIntersection(S, T, A, B)
                     if (Geometry2D.onSegment(A, B, intersection) && Geometry2D.onSegment(S, T, intersection)) {
@@ -66,25 +65,20 @@ class Geometry2DTest extends Specification {
                 }
 
                 ArrayList<RailPoint> points = new ArrayList<>()
-                for (Point point : above) points.add(new RailPoint(point.x, point.y, true));
-                for (Point point : under) points.add(new RailPoint(point.x, point.y, false));
+                for (Point point : above) points.add(new RailPoint(point.x, point.y, true))
+                for (Point point : under) points.add(new RailPoint(point.x, point.y, false))
                 Collections.sort(points)
                 int answer = 0
                 if (points.size() > 0) {
                     boolean a = points.get(0).above
                     for (RailPoint point : points) if (point.above != a) {
-                        answer++;
+                        answer++
                         a = point.above
                     }
                 }
-                ans.add(String.valueOf(answer))
-            }
-            stream = getClass().getClassLoader().getResourceAsStream(filename + ".ans")
-            reader = new BufferedReader(new InputStreamReader(stream))
-            for (String a : ans) {
-                assert a == reader.readLine()
+
+                assert answer == Integer.parseInt(outQ.poll())
             }
         }
-
     }
 }
