@@ -39,20 +39,20 @@ class StarrySkyTreeMatrixTest extends Specification {
         int MOD = Matrix.MOD
 
         10.times {
-            int N = 25;
-            long[] a = new long[N];
-            long[] check = new long[N];
+            int N = 25
+            long[] a = new long[N]
+            long[] check = new long[N]
             for (int i = 0; i < N; i++) {
-                a[i] = random.nextInt(1000000);
+                a[i] = random.nextInt(1000000)
                 check[i] = a[i]
             }
 
-            Matrix[] ms = new Matrix[N];
+            Matrix[] ms = new Matrix[N]
             for (int i = 0; i < N; i++) {
                 ms[i] = Matrix.powMatrix(base, a[i] - 1)
             }
 
-            StarrySkyTreeMatrix seg = new StarrySkyTreeMatrix(ms);
+            StarrySkyTreeMatrix seg = new StarrySkyTreeMatrix(ms)
 
             int Q = 100
             for (int q = 0; q < Q; q++) {
