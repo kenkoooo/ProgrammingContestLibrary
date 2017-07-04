@@ -39,4 +39,58 @@ class ConvexHullTest extends Specification {
             }
         }
     }
+
+    def "2017 模擬国内予選 E を解かせる"() {
+        setup:
+        def inQ = TestUtils.loadResourceFiles("jag-domestic-2017-E/in", getClass())
+        def outQ = TestUtils.loadResourceFiles("jag-domestic-2017-E/out", getClass())
+
+        def counter = new TestCaseCounter(inQ)
+        while (counter.hasNext()) {
+            int N = Integer.parseInt(inQ.poll())
+            if (N == 0) {
+                continue
+            }
+
+            ArrayList<Point>[] lists = new ArrayList[N]
+            for (int i = 0; i < N; i++) {
+                lists[i] = new ArrayList<>()
+            }
+            int[] H = new int[N]
+            for (int i = 0; i < N; i++) {
+                int size = Integer.parseInt(inQ.poll())
+                H[i] = Integer.parseInt(inQ.poll())
+                for (int j = 0; j < size; j++) {
+                    int x = Integer.parseInt(inQ.poll())
+                    int y = Integer.parseInt(inQ.poll())
+                    lists[i].add(new Point(x, y))
+                }
+            }
+
+            int theta = Integer.parseInt(inQ.poll())
+            int phi = Integer.parseInt(inQ.poll())
+            Point start = new Point(Integer.parseInt(inQ.poll()), Integer.parseInt(inQ.poll()))
+            Point goal = new Point(Integer.parseInt(inQ.poll()), Integer.parseInt(inQ.poll()))
+
+            for (int i = 0; i < N; i++) {
+                int size = lists[i].size()
+                int height = H[i]
+                for (int j = 0; j < size; j++) {
+                    Point p = lists[i].get(j)
+                    double rad = Math.toRadians(theta + 180)
+                    double radius = height / Math.tan(Math.toRadians(phi))
+                    double x = Math.cos(rad) * radius
+                    double y = Math.sin(rad) * radius
+                    lists[i].add(new Point(x, y))
+                }
+            }
+
+            ArrayList<Point>[] hull = new ArrayList<Point>[N]
+            for (int i = 0; i < N; i++) {
+                hull[i] = ConvexHull.run(lists[i])
+            }
+        }
+
+
+    }
 }

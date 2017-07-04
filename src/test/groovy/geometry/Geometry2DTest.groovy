@@ -20,7 +20,7 @@ class Geometry2DTest extends Specification {
         int compareTo(RailPoint o) {
             return Double.compare(this.x, o.x)
         }
-    };
+    }
 
     def "AOJ2003を解かせる"() {
         setup:
