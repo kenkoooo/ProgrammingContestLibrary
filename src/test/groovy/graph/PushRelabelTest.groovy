@@ -1,6 +1,7 @@
 package graph
 
 import spock.lang.Specification
+import utils.TestCaseCounter
 import utils.TestUtils
 
 class PushRelabelTest extends Specification {
@@ -53,29 +54,22 @@ class PushRelabelTest extends Specification {
 
     def "Solve AOJ GRL_6_A"() {
         setup:
-        ArrayDeque<String> input = TestUtils.parseResourceInput(getClass(), "GRL_6_A.in")
+        def inQ = TestUtils.loadResourceFiles("GRL_6_A/in", getClass())
+        def outQ = TestUtils.loadResourceFiles("GRL_6_A/out", getClass())
 
-        when:
-        int testCaseNum = Integer.parseInt(input.poll())
-        ArrayDeque<String> ans = new ArrayDeque<>()
-        testCaseNum.times {
-            int V = Integer.parseInt(input.poll())
-            int E = Integer.parseInt(input.poll())
-            PushRelabel dinitz = new PushRelabel(V)
+        def counter = new TestCaseCounter(inQ)
+        while (counter.hasNext()) {
+            int V = Integer.parseInt(inQ.poll())
+            int E = Integer.parseInt(inQ.poll())
+            PushRelabel pushRelabel = new PushRelabel(V)
             E.times {
-                int u = Integer.parseInt(input.poll())
-                int v = Integer.parseInt(input.poll())
-                int c = Integer.parseInt(input.poll())
-                dinitz.addEdge(u, v, c)
+                int u = Integer.parseInt(inQ.poll())
+                int v = Integer.parseInt(inQ.poll())
+                int c = Integer.parseInt(inQ.poll())
+                pushRelabel.addEdge(u, v, c)
             }
-            ans.add(String.valueOf(dinitz.maxFlow(0, V - 1)))
-        }
-
-        then:
-        ArrayDeque<String> output = TestUtils.parseResourceInput(getClass(), "GRL_6_A.out")
-        int size = Integer.parseInt(output.poll())
-        size.times {
-            assert ans.poll() == output.poll()
+            long ans = pushRelabel.maxFlow(0, V - 1)
+            assert ans == Long.parseLong(outQ.poll())
         }
     }
 }

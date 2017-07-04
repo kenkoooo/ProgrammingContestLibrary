@@ -1,26 +1,26 @@
 package graph
 
 import spock.lang.Specification
+import utils.TestCaseCounter
 import utils.TestUtils
 
 
 class DinitzTest extends Specification {
     def "Google Code Jam 2016 Round 1B Problem C. Technobabble を解かせる"() {
         setup:
-        ArrayDeque<String> inputStringDeque = TestUtils.parseResourceInput(getClass(), "GCJ2016R1B-C-large-practice.in")
+        def inQ = TestUtils.parseResourceInput(getClass(), "GCJ2016R1B-C-large-practice.in")
+        def outQ = TestUtils.parseResourceInput(getClass(), "GCJ2016R1B-C-large-practice.out")
 
-        when:
-        int testCaseNum = Integer.parseInt(inputStringDeque.poll())
-        ArrayList<String> answers = new ArrayList<>()
+        int testCaseNum = Integer.parseInt(inQ.poll())
         testCaseNum.times {
-            int N = Integer.parseInt(inputStringDeque.poll())
+            int N = Integer.parseInt(inQ.poll())
             String[] prefix = new String[N]
             String[] suffix = new String[N]
             TreeSet<String> prefixSet = new TreeSet<>()
             TreeSet<String> suffixSet = new TreeSet<>()
             for (int i = 0; i < N; i++) {
-                prefix[i] = inputStringDeque.poll()
-                suffix[i] = inputStringDeque.poll()
+                prefix[i] = inQ.poll()
+                suffix[i] = inQ.poll()
                 prefixSet.add(prefix[i])
                 suffixSet.add(suffix[i])
             }
@@ -38,44 +38,31 @@ class DinitzTest extends Specification {
             for (int i = 0; i < prefixList.size(); i++) dinitz.addEdge(source, i, 1)
             for (int i = 0; i < suffixList.size(); i++) dinitz.addEdge(i + prefixList.size(), sink, 1)
             int ans = N - (source - dinitz.maxFlow(source, sink))
-            answers.add(String.valueOf(ans))
-        }
 
-        then:
-        ArrayDeque<String> check = TestUtils.parseResourceInput(getClass(), "GCJ2016R1B-C-large-practice.out")
-        assert answers.size() * 3 == check.size()
-        for (int i = 0; i < answers.size(); i++) {
-            check.poll()
-            check.poll()
-            assert answers.get(i) == check.poll()
+            outQ.poll()
+            outQ.poll()
+            assert ans == Integer.parseInt(outQ.poll())
         }
     }
 
     def "Solve AOJ GRL_6_A"() {
         setup:
-        ArrayDeque<String> input = TestUtils.parseResourceInput(getClass(), "GRL_6_A.in")
+        def inQ = TestUtils.loadResourceFiles("GRL_6_A/in", getClass())
+        def outQ = TestUtils.loadResourceFiles("GRL_6_A/out", getClass())
 
-        when:
-        int testCaseNum = Integer.parseInt(input.poll())
-        ArrayDeque<String> ans = new ArrayDeque<>()
-        testCaseNum.times {
-            int V = Integer.parseInt(input.poll())
-            int E = Integer.parseInt(input.poll())
+        def counter = new TestCaseCounter(inQ)
+        while (counter.hasNext()) {
+            int V = Integer.parseInt(inQ.poll())
+            int E = Integer.parseInt(inQ.poll())
             Dinitz dinitz = new Dinitz(V)
             E.times {
-                int u = Integer.parseInt(input.poll())
-                int v = Integer.parseInt(input.poll())
-                int c = Integer.parseInt(input.poll())
+                int u = Integer.parseInt(inQ.poll())
+                int v = Integer.parseInt(inQ.poll())
+                int c = Integer.parseInt(inQ.poll())
                 dinitz.addEdge(u, v, c)
             }
-            ans.add(String.valueOf(dinitz.maxFlow(0, V - 1)))
-        }
-
-        then:
-        ArrayDeque<String> output = TestUtils.parseResourceInput(getClass(), "GRL_6_A.out")
-        int size = Integer.parseInt(output.poll())
-        size.times {
-            assert ans.poll() == output.poll()
+            long ans = dinitz.maxFlow(0, V - 1)
+            assert ans == Long.parseLong(outQ.poll())
         }
     }
 }
