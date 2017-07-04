@@ -81,16 +81,43 @@ class ConvexHullTest extends Specification {
                     double radius = height / Math.tan(Math.toRadians(phi))
                     double x = Math.cos(rad) * radius
                     double y = Math.sin(rad) * radius
-                    lists[i].add(new Point(x, y))
+                    lists[i].add(new Point(p.x + x, p.y + y))
                 }
             }
 
-            ArrayList<Point>[] hull = new ArrayList<Point>[N]
+            int M = N + 2
+            ArrayList<Point>[] hull = new ArrayList<Point>[M]
             for (int i = 0; i < N; i++) {
                 hull[i] = ConvexHull.run(lists[i])
             }
+            hull[N] = new ArrayList<>()
+            hull[N].add(start)
+            hull[N + 1] = new ArrayList<>()
+            hull[N + 1].add(goal)
 
+            double[][] dist = new double[M][M]
+            for (double[] d : dist) Arrays.fill(d, 1e20)
+            for (int i = 0; i < M; i++) {
+                for (int j = 0; j < M; j++) {
+                    if (i == j) continue
+                    dist[i][j] = Geometry2D.distanceHulls(hull[i], hull[j])
+                }
+            }
 
+            for (int i = 0; i < M; i++) {
+                dist[i][i] = 0
+            }
+            for (int k = 0; k < M; k++) {
+                for (int i = 0; i < M; i++) {
+                    for (int j = 0; j < M; j++) {
+                        dist[i][j] = Math.min(dist[i][j], dist[i][k] + dist[k][j])
+                    }
+                }
+            }
+
+            double ans = dist[N][N + 1]
+            double check = Double.parseDouble(outQ.poll())
+            assert Math.abs(check - ans) < 0.001
         }
 
 
