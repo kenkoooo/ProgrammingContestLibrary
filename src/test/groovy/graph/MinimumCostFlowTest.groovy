@@ -1,6 +1,7 @@
 package graph
 
 import spock.lang.Specification
+import utils.TestCaseCounter
 import utils.TestUtils
 
 
@@ -28,5 +29,53 @@ class MinimumCostFlowTest extends Specification {
             int ans = INF * 2 * 365 - flow.run(0, 365, 2)
             assert ans == Integer.parseInt(outQ.poll())
         }
+    }
+
+    def "模擬国内予選 2017 F"() {
+        setup:
+        def inQ = TestUtils.loadResourceFiles("jag-domestic-2017-F/in", getClass())
+        def outQ = TestUtils.loadResourceFiles("jag-domestic-2017-F/out", getClass())
+        def counter = new TestCaseCounter(inQ)
+
+        while (counter.hasNext()) {
+            int N = Integer.parseInt(inQ.poll())
+            if (N == 0) {
+                continue
+            }
+
+            int[][] matryoshka = new int[N][3]
+            for (int i = 0; i < N; i++) {
+                matryoshka[i][0] = Integer.parseInt(inQ.poll())
+                matryoshka[i][1] = Integer.parseInt(inQ.poll())
+                matryoshka[i][2] = Integer.parseInt(inQ.poll())
+
+                Arrays.sort(matryoshka[i])
+            }
+
+            MinimumCostFlow costFlow = new MinimumCostFlow(N * 2 + 2)
+            int source = N * 2
+            int sink = source + 1
+            for (int i = 0; i < N; i++) {
+                int[] m = matryoshka[i]
+                costFlow.addEdge(i, sink, 1, m[0] * m[1] * m[2])
+                costFlow.addEdge(i + N, sink, 1, 0)
+                costFlow.addEdge(source, i, 1, 0)
+            }
+
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
+                    if (i == j) continue
+                    int[] p = matryoshka[i]
+                    int[] q = matryoshka[j]
+
+                    if (p[0] < q[0] && p[1] < q[1] && p[2] < q[2]) {
+                        costFlow.addEdge(i, j + N, 1, 0)
+                    }
+                }
+            }
+            int cost = costFlow.run(source, sink, N)
+            assert cost==Integer.parseInt(outQ.poll())
+        }
+
     }
 }
