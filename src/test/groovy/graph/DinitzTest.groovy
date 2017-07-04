@@ -3,6 +3,7 @@ package graph
 import spock.lang.Specification
 import utils.TestUtils
 
+
 class DinitzTest extends Specification {
     def "Google Code Jam 2016 Round 1B Problem C. Technobabble を解かせる"() {
         setup:

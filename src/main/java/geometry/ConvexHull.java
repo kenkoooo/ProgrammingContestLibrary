@@ -1,57 +1,70 @@
 package geometry;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class ConvexHull {
 
+  /**
+   * 線分の端にない点を含まない凸包を作成する
+   *
+   * @param ps 頂点のリスト
+   * @return 凸包を構成する頂点のリスト
+   */
   public static ArrayList<Point> run(ArrayList<Point> ps) {
+    return run(ps, false);
+  }
+
+  /**
+   * 凸包を作成する
+   *
+   * @param ps 頂点のリスト
+   * @param containOnSegment 線分の端にない頂点も凸包に含むかどうか
+   * @return 凸包を構成する頂点のリスト
+   */
+  public static ArrayList<Point> run(ArrayList<Point> ps, boolean containOnSegment) {
     int N = ps.size();
     if (N <= 1) {
       return new ArrayList<>(ps);
     }
 
     Collections.sort(ps);
+    // 凸包の頂点数
+    int k = 0;
 
-    int[] qs = new int[N * 2];//構築中の凸包
-    int k = 0;//凸包の頂点数
+    // 構築中の凸包
+    Point[] qs = new Point[N * 2];
 
     // 下側の凸包を作成
-    for (int i = 0; i < N; i++) {
-      if (k >= 1 && ps.get(qs[k - 1]).x == ps.get(i).x
-          && ps.get(qs[k - 1]).y == ps.get(i).y) {
-        continue;
+    for (Point p : ps) {
+      while (k > 1) {
+        double det = qs[k - 1].sub(qs[k - 2]).det(p.sub(qs[k - 1]));
+        if (det < 0 || (det <= 0 && !containOnSegment)) {
+          k--;
+        } else {
+          break;
+        }
       }
-      while (k > 1 && counterClockWise(ps.get(qs[k - 2]), ps.get(qs[k - 1]), ps.get(i)) > 0) {
-        k--;
-      }
-      qs[k++] = i;
+      qs[k++] = p;
     }
 
     // 上側の凸包を作成
-    int inf = k + 1;
-    for (int i = N - 2; i >= 0; i--) {
-      if (k >= 1 && ps.get(qs[k - 1]).x == ps.get(i).x
-          && ps.get(qs[k - 1]).y == ps.get(i).y) {
-        continue;
+    for (int i = N - 2, t = k; i >= 0; i--) {
+      Point p = ps.get(i);
+      while (k > t) {
+        double det = qs[k - 1].sub(qs[k - 2]).det(p.sub(qs[k - 1]));
+        if (det < 0 || (det <= 0 && !containOnSegment)) {
+          k--;
+        } else {
+          break;
+        }
       }
-      while (k >= inf && counterClockWise(ps.get(qs[k - 2]), ps.get(qs[k - 1]), ps.get(i)) > 0) {
-        k--;
-      }
-      qs[k++] = i;
+      qs[k++] = p;
     }
 
-    ArrayList<Point> ret = new ArrayList<>(k - 1);
-    for (int i = 0; i < k - 1; i++) {
-      ret.add(ps.get(qs[i]));
-    }
-    return ret;
-  }
-
-  /**
-   * a->b から見て、t が反時計回り方向にあるなら正の値を返す
-   */
-  public static double counterClockWise(Point a, Point b, Point t) {
-    return (t.x - a.x) * (b.y - a.y) - (b.x - a.x) * (t.y - a.y);
+    ArrayList<Point> hull = new ArrayList<>(k - 1);
+    hull.addAll(Arrays.asList(qs).subList(0, k - 1));
+    return hull;
   }
 }

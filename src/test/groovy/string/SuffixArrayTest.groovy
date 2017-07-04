@@ -107,8 +107,8 @@ class SuffixArrayTest extends Specification {
 
     def "AOJ2644を解かせる2"() {
         setup:
-        def inQ = new ArrayDeque<String>(TestUtils.loadResourceFiles("AOJ2644/in", getClass()))
-        def outQ = new ArrayDeque<String>(TestUtils.loadResourceFiles("AOJ2644/out", getClass()))
+        def inQ = TestUtils.loadResourceFiles("AOJ2644/in", getClass())
+        def outQ = TestUtils.loadResourceFiles("AOJ2644/out", getClass())
 
         def testcase = 0
         while (!inQ.isEmpty()) {
