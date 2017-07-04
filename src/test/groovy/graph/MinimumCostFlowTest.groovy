@@ -1,43 +1,32 @@
 package graph
 
 import spock.lang.Specification
+import utils.TestUtils
 
 
 class MinimumCostFlowTest extends Specification {
     def "AOJ 1246 を解かせる"() {
         setup:
-        InputStream stream = getClass().getClassLoader().getResourceAsStream("AOJ-1246.in")
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream))
+        def inQ = TestUtils.parseResourceInput(getClass(), "AOJ-1246.in")
+        def outQ = TestUtils.parseResourceInput(getClass(), "AOJ-1246.out")
 
-        def line
-        ArrayDeque<String> list = new ArrayDeque<>()
-        while ((line = reader.readLine()) != null) list.add((String) line)
-        ArrayList<Long> answers = new ArrayList<>();
         while (true) {
-            int N = Integer.parseInt(list.poll())
-            if (N == 0) break;
+            int N = Integer.parseInt(inQ.poll())
+            if (N == 0) break
 
-            int INF = (int) 1e6;
-            MinimumCostFlow flow = new MinimumCostFlow(366);
+            int INF = (int) 1e6
+            MinimumCostFlow flow = new MinimumCostFlow(366)
             for (int i = 0; i < N; i++) {
-                String[] uvw = list.poll().split(" ")
-                int u = Integer.parseInt(uvw[0]) - 1, v = Integer.parseInt(uvw[1]) - 1, w = Integer.parseInt(uvw[2]);
-                flow.addEdge(u, v + 1, 1, INF * (v + 1 - u) - w);
+                int u = Integer.parseInt(inQ.poll()) - 1
+                int v = Integer.parseInt(inQ.poll()) - 1
+                int w = Integer.parseInt(inQ.poll())
+                flow.addEdge(u, v + 1, 1, INF * (v + 1 - u) - w)
             }
             for (int i = 0; i < 365; i++) {
-                flow.addEdge(i, i + 1, 2, INF);
+                flow.addEdge(i, i + 1, 2, INF)
             }
-            answers.add(INF * 2 * 365 - flow.run(0, 365, 2));
+            int ans = INF * 2 * 365 - flow.run(0, 365, 2)
+            assert ans == Integer.parseInt(outQ.poll())
         }
-        stream = getClass().getClassLoader().getResourceAsStream("AOJ-1246.out")
-        reader = new BufferedReader(new InputStreamReader(stream))
-        ArrayDeque<String> check = new ArrayDeque<>()
-        while ((line = reader.readLine()) != null) check.add((String) line)
-        assert answers.size() == check.size()
-        for (int i = 0; i < answers.size(); i++) {
-            assert answers.get(i) == Long.parseLong(check.poll())
-        }
-
-
     }
 }
