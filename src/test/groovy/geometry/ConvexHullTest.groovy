@@ -40,7 +40,5 @@ class ConvexHullTest extends Specification {
             println("Test ${testcase}: Accepted")
             testcase++
         }
-
     }
-
 }
