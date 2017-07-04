@@ -2,4 +2,4 @@ pipeline:
   build:
     image: openjdk
     commands:
-      - ./gradlew build
+      - ./gradlew test
