@@ -10,6 +10,7 @@ repositories {
 test {
     testLogging {
         events 'started', 'skipped', 'passed', 'failed'
+        showStandardStreams = true
     }
 }
 

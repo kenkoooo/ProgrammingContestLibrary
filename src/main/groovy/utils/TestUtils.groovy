@@ -5,15 +5,11 @@ import java.nio.file.Paths
 
 class TestUtils {
     static ArrayDeque<String> parseResourceInput(Class clazz, String filename) {
-        InputStream stream = clazz.getClassLoader().getResourceAsStream(filename)
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream))
-
-        String line
-        ArrayDeque<String> inputStringDeque = new ArrayDeque<>()
-        while ((line = reader.readLine()) != null) {
-            inputStringDeque.addAll(Arrays.asList(line.split(" ")))
-        }
-        return inputStringDeque
+        return Files.readAllLines(Paths.get(clazz.getClassLoader().getResource(filename).toURI()))
+                .stream()
+                .map { line -> line.split(" ") }
+                .flatMap { array -> Arrays.stream(array) }
+                .collect()
     }
 
     /**
