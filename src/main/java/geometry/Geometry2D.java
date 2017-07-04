@@ -8,6 +8,10 @@ public class Geometry2D {
    * Return the point which is intersection of line p1-p2 and q1-q2
    */
   public static Point lineIntersection(Point p1, Point p2, Point q1, Point q2) {
+    if (Math.abs(p2.sub(p1).det(q2.sub(q1))) < EPS) {
+      return null;
+    }
+
     double a = (q2.sub(q1)).det(q1.sub(p1));
     double b = (q2.sub(q1)).det(p2.sub(p1));
     return p1.add(p2.sub(p1).multiply(a / b));
@@ -47,6 +51,23 @@ public class Geometry2D {
     }
 
     return Math.abs(ab.det(ac)) / ab.abs();
+  }
+
+  /**
+   * @param p1 the edge of the left line
+   * @param p2 the edge of the left line
+   * @param q1 the edge of the right line
+   * @param q2 the edge of the right line
+   * @return {@link Point} the intersection of two lines if the two segments intersect, otherwise
+   * {@link null}
+   */
+  public static Point segmentIntersection(Point p1, Point p2, Point q1, Point q2) {
+    Point intersect = lineIntersection(p1, p2, q1, q2);
+    if (intersect != null && onSegment(p1, p2, intersect) && onSegment(q1, q2, intersect)) {
+      return intersect;
+    } else {
+      return null;
+    }
   }
 
 }

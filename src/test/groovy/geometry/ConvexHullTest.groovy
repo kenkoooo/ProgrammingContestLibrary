@@ -89,6 +89,8 @@ class ConvexHullTest extends Specification {
             for (int i = 0; i < N; i++) {
                 hull[i] = ConvexHull.run(lists[i])
             }
+
+
         }
 
 

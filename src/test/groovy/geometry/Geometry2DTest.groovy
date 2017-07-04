@@ -51,8 +51,8 @@ class Geometry2DTest extends Specification {
                     int o = Integer.parseInt(inQ.poll())
                     int l = Integer.parseInt(inQ.poll())
 
-                    Point intersection = Geometry2D.lineIntersection(S, T, A, B)
-                    if (Geometry2D.onSegment(A, B, intersection) && Geometry2D.onSegment(S, T, intersection)) {
+                    Point intersection = Geometry2D.segmentIntersection(S, T, A, B)
+                    if (intersection != null) {
                         if (o == 1) {
                             if (l == 1) above.add(intersection)
                             else under.add(intersection)
