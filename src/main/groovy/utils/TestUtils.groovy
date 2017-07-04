@@ -1,6 +1,7 @@
 package utils
 
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 
 class TestUtils {
@@ -24,8 +25,9 @@ class TestUtils {
         if (url == null) {
             throw new IllegalArgumentException(directory + " is null")
         }
-        return Files.walk(Paths.get(url.toURI()), 1)
-                .filter { path -> path.toFile().isFile() }
+
+        List<Path> paths = Files.list(Paths.get(url.toURI())).collect().sort()
+        return paths.stream()
                 .map { path -> Files.readAllLines(path) }
                 .filter { x -> x != null }
                 .flatMap { x -> x.stream() }
