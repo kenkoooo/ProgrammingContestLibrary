@@ -11,7 +11,7 @@ matrix:
       jdk: openjdk8
         - cd java
       script:
-        - ./gradlew test
+        - gradle test
 
     - language: rust
       rust: nightly
