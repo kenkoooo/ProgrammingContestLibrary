@@ -1,0 +1,21 @@
+matrix:
+  include:
+    - language: scala
+      scala: 2.12.3
+      before_script:
+        - cd scala
+      script:
+        - sbt test
+
+    - language: java
+      jdk: openjdk8
+        - cd java
+      script:
+        - ./gradlew test
+
+    - language: rust
+      rust: nightly
+      before_script:
+        - cd rust
+      script:
+        - cargo test
