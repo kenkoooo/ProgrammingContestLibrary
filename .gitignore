@@ -1,5 +1,6 @@
 **/.idea/
+**/*.iml
 **/.gradle/
 **/build/
 **/target/
-
+**/*.lock
