@@ -1,5 +1,0 @@
-pipeline:
-  build:
-    image: openjdk
-    commands:
-      - ./gradlew test
