@@ -9,9 +9,10 @@ matrix:
 
     - language: java
       jdk: openjdk8
+      before_script:
         - cd java
       script:
-        - gradle test
+        - ./gradlew test
 
     - language: rust
       rust: nightly
