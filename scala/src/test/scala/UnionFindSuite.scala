@@ -26,6 +26,14 @@ class UnionFindSuite extends FunSuite with Matchers {
       } {
         uf.isSame(i, j) shouldBe (array(i) == array(j))
       }
+
+      val set = array.toSet
+      uf.size() shouldBe set.size
+
+      array.indices.foreach { i =>
+        val partialSize = array.count(_ == array(i))
+        uf.partialSizeOf(i) shouldBe partialSize
+      }
     }
 
   }
